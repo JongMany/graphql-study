@@ -44,6 +44,10 @@ const messagesRoutes = [
     route: "/messages",
     handler: (req, res) => {
       const { body } = req;
+      if (!body.text || !body.userId) {
+        return res.status(400).send({ message: "Invalid request" });
+      }
+
       const messages = getMessages();
       const newMessage = {
         id: v4(),
@@ -66,6 +70,10 @@ const messagesRoutes = [
           body,
           params: { id },
         } = req;
+        if (!body.text || !body.userId) {
+          return res.status(400).send({ message: "Invalid request" });
+        }
+
         const messages = getMessages();
         const targetIndex = messages.findIndex((item) => item.id === id);
 
