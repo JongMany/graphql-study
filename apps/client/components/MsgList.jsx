@@ -4,11 +4,12 @@ import React, { useEffect, useState } from "react";
 import MsgItem from "./MsgItem";
 import MsgInput from "./MsgInput";
 import { fetcher } from "../fetcher";
-
-const userIds = ["roy", "jay"];
-const getRandomUserIds = () => userIds[Math.round(Math.random())];
+import { useRouter } from "next/router";
 
 function MsgList() {
+  const {
+    query: { userId = "" },
+  } = useRouter();
   const [messages, setMessages] = useState([]);
   const [editingId, setEditingId] = useState(null);
 
@@ -21,13 +22,16 @@ function MsgList() {
     getMessages();
   }, []);
 
-  const onCreate = (text) => {
-    const newMessage = {
-      id: messages.length + 1,
-      userId: getRandomUserIds(),
-      timestamp: Date.now(),
-      text: `${messages.length + 1} ${text}`,
-    };
+  const onCreate = async (text) => {
+    const newMessage = await fetcher("post", "messages", {
+      json: { text, userId },
+    });
+    // const newMessage = {
+    //   id: messages.length + 1,
+    //   userId: getRandomUserIds(),
+    //   timestamp: Date.now(),
+    //   text: `${messages.length + 1} ${text}`,
+    // };
     setMessages([newMessage, ...messages]);
   };
 
