@@ -1,4 +1,4 @@
-import { readDB } from "../dbController.js";
+import { readDB, writeDB } from "../dbController.js";
 import { v4 } from "uuid";
 
 const getMessages = () => {
