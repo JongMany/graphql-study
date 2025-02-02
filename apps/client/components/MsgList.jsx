@@ -26,25 +26,26 @@ function MsgList() {
     const newMessage = await fetcher("post", "messages", {
       json: { text, userId },
     });
-    // const newMessage = {
-    //   id: messages.length + 1,
-    //   userId: getRandomUserIds(),
-    //   timestamp: Date.now(),
-    //   text: `${messages.length + 1} ${text}`,
-    // };
+    if (!newMessage) return;
+
     setMessages([newMessage, ...messages]);
   };
 
   const doneEdit = () => {
     setEditingId(null);
   };
-  const onUpdate = (text, id) => {
+  const onUpdate = async (text, id) => {
+    const newMessage = await fetcher("put", `messages/${id}`, {
+      json: { text, userId },
+    });
+    if (!newMessage) return;
+
     setMessages((prev) => {
       const targetIndex = messages.findIndex((msg) => msg.id === id);
       if (targetIndex === -1) return prev;
       return [
         ...prev.slice(0, targetIndex),
-        { ...prev[targetIndex], text },
+        { ...newMessage },
         ...prev.slice(targetIndex + 1),
       ];
     });
@@ -69,6 +70,7 @@ function MsgList() {
             }}
             isEditing={editingId === item.id}
             onDelete={() => onDelete(item.id)}
+            myId={userId}
           />
         ))}
       </ul>
