@@ -52,8 +52,14 @@ function MsgList() {
     doneEdit();
   };
 
-  const onDelete = (id) => {
-    setMessages((prev) => prev.filter((msg) => msg.id !== id));
+  const onDelete = async (id) => {
+    console.log(id, messages);
+
+    const { id: removedId } = await fetcher(
+      "delete",
+      `messages/${id}?userId=${userId}`
+    );
+    setMessages((prev) => prev.filter((msg) => msg.id !== `${removedId}`));
   };
 
   return (
