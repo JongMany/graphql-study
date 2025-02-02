@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import MsgItem from "./MsgItem";
 import MsgInput from "./MsgInput";
+import { fetcher } from "../fetcher";
 
 const userIds = ["roy", "jay"];
 const getRandomUserIds = () => userIds[Math.round(Math.random())];
@@ -11,17 +12,13 @@ function MsgList() {
   const [messages, setMessages] = useState([]);
   const [editingId, setEditingId] = useState(null);
 
+  const getMessages = async () => {
+    const messagesFromServer = await fetcher("get", "messages");
+    setMessages(messagesFromServer);
+  };
+
   useEffect(() => {
-    const msgs = Array(50)
-      .fill(0)
-      .map((_, i) => ({
-        id: i + 1,
-        userId: getRandomUserIds(),
-        timestamp: 1234567890123 + i * 17000000 * 600,
-        text: `${i + 1} mock text`,
-      }))
-      .reverse();
-    setMessages(msgs);
+    getMessages();
   }, []);
 
   const onCreate = (text) => {
@@ -60,6 +57,7 @@ function MsgList() {
       <ul className="messages">
         {messages.map((item) => (
           <MsgItem
+            key={item.id}
             {...item}
             onUpdate={onUpdate}
             startEdit={() => {
