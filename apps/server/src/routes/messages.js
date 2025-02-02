@@ -92,21 +92,22 @@ const messagesRoutes = [
     handler: (req, res) => {
       try {
         const {
-          body,
+          query: { userId },
           params: { id },
         } = req;
+
         const messages = getMessages();
         const targetIndex = messages.findIndex((item) => item.id === id);
 
         if (targetIndex === -1) {
           throw new Error("Not found");
         }
-        if (messages[targetIndex].userId !== body.userId) {
+        if (messages[targetIndex].userId !== userId) {
           throw new Error("Unauthorized");
         }
         messages.splice(targetIndex, 1);
         setMessages(messages);
-        res.send(id);
+        res.send({ id });
       } catch (error) {
         console.error(error);
         res.status(500).send({ message: error });
