@@ -1,0 +1,16 @@
+{
+  "name": "graphql-study",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "client": "pnpm --filter=client",
+    "server": "pnpm --filter=server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "workspaces": [
+    "apps/*"
+  ]
+}
