@@ -1,6 +1,16 @@
 import React from "react";
+import MsgInput from "./MsgInput";
 
-export default function MsgItem({ userId, timestamp, text }) {
+export default function MsgItem({
+  id,
+  userId,
+  timestamp,
+  text,
+  onUpdate,
+  onDelete,
+  startEdit,
+  isEditing,
+}) {
   return (
     <li className="messages__item">
       <h3>
@@ -17,7 +27,17 @@ export default function MsgItem({ userId, timestamp, text }) {
         </sub>
       </h3>
 
-      {text}
+      {isEditing ? (
+        <>
+          <MsgInput id={id} mutate={onUpdate} text={text} />
+        </>
+      ) : (
+        text
+      )}
+      <div className="messages__button">
+        <button onClick={startEdit}>수정</button>
+        <button onClick={onDelete}>삭제</button>
+      </div>
     </li>
   );
 }

@@ -9,6 +9,7 @@ const getRandomUserIds = () => userIds[Math.round(Math.random())];
 
 function MsgList() {
   const [messages, setMessages] = useState([]);
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
     const msgs = Array(50)
@@ -33,12 +34,40 @@ function MsgList() {
     setMessages([newMessage, ...messages]);
   };
 
+  const doneEdit = () => {
+    setEditingId(null);
+  };
+  const onUpdate = (text, id) => {
+    setMessages((prev) => {
+      const targetIndex = messages.findIndex((msg) => msg.id === id);
+      if (targetIndex === -1) return prev;
+      return [
+        ...prev.slice(0, targetIndex),
+        { ...prev[targetIndex], text },
+        ...prev.slice(targetIndex + 1),
+      ];
+    });
+    doneEdit();
+  };
+
+  const onDelete = (id) => {
+    setMessages((prev) => prev.filter((msg) => msg.id !== id));
+  };
+
   return (
     <>
       <MsgInput mutate={onCreate} />
       <ul className="messages">
         {messages.map((item) => (
-          <MsgItem {...item} />
+          <MsgItem
+            {...item}
+            onUpdate={onUpdate}
+            startEdit={() => {
+              setEditingId(item.id);
+            }}
+            isEditing={editingId === item.id}
+            onDelete={() => onDelete(item.id)}
+          />
         ))}
       </ul>
     </>
