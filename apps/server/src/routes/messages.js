@@ -78,8 +78,8 @@ const messagesRoutes = [
         const newMessages = { ...messages[targetIndex], text: body.text };
         messages[targetIndex] = newMessages;
 
-        setMessages(newMessages);
-        res.send();
+        setMessages(messages);
+        res.send(newMessages);
       } catch (error) {
         console.error(error);
         res.status(500).send({ message: error });
