@@ -14,7 +14,6 @@ const messageResolver = {
   Query: {
     messages: (parent, args, context) => {
       const { db } = context;
-      console.log(db.messages);
       return db.messages;
     },
     message: (parent, args, context) => {
