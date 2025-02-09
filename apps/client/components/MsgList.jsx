@@ -1,25 +1,37 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import MsgItem from "./MsgItem";
 import MsgInput from "./MsgInput";
 import { fetcher } from "../fetcher";
 import { useRouter } from "next/router";
+import useInfiniteScroll from "../hooks/useInfiniteScroll";
 
 function MsgList() {
   const { query } = useRouter();
   const userId = query.userId || query.userid || "";
   const [messages, setMessages] = useState([]);
   const [editingId, setEditingId] = useState(null);
+  const fetchMoreEl = useRef(null);
+  const { intersecting } = useInfiniteScroll(fetchMoreEl);
+  const [hasNext, setHasNext] = useState(true);
 
   const getMessages = async () => {
-    const messagesFromServer = await fetcher("get", "messages");
-    setMessages(messagesFromServer);
+    const newMessages = await fetcher("get", "messages", {
+      searchParams: { cursor: messages[messages.length - 1]?.id || "" },
+    });
+    if (newMessages.length === 0) {
+      setHasNext(false);
+      return;
+    }
+    setMessages((prev) => [...prev, ...newMessages]);
   };
 
   useEffect(() => {
-    getMessages();
-  }, []);
+    if (intersecting && hasNext) {
+      getMessages();
+    }
+  }, [intersecting]);
 
   const onCreate = async (text) => {
     const newMessage = await fetcher("post", "messages", {
@@ -33,6 +45,7 @@ function MsgList() {
   const doneEdit = () => {
     setEditingId(null);
   };
+
   const onUpdate = async (text, id) => {
     const newMessage = await fetcher("put", `messages/${id}`, {
       json: { text, userId },
@@ -79,6 +92,7 @@ function MsgList() {
           />
         ))}
       </ul>
+      <div ref={fetchMoreEl}></div>
     </>
   );
 }
