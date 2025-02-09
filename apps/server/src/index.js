@@ -18,12 +18,7 @@ import { readDB } from "./dbController.js";
 
 async function startGraphqlServer() {
   const app = express();
-  app.use(
-    cors({
-      origin: "http://localhost:3000",
-      credentials: true,
-    })
-  );
+
   const server = new ApolloServer({
     typeDefs: schema,
     resolvers,
@@ -35,7 +30,14 @@ async function startGraphqlServer() {
     },
   });
   await server.start();
-  server.applyMiddleware({ app, path: "/graphql" });
+  server.applyMiddleware({
+    app,
+    path: "/graphql",
+    cors: {
+      origin: ["http://localhost:3000", "https://studio.apollographql.com"],
+      credentials: true,
+    },
+  });
 
   app.listen(8000, () => {
     console.log("Server started at http://localhost:8000");
