@@ -23,7 +23,7 @@ async function startGraphqlServer() {
     typeDefs: schema,
     resolvers,
     context: {
-      models: {
+      db: {
         messages: readDB("messages"),
         users: readDB("users"),
       },
