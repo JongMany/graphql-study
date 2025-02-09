@@ -7,10 +7,10 @@ import { fetcher } from "../fetcher";
 import { useRouter } from "next/router";
 import useInfiniteScroll from "../hooks/useInfiniteScroll";
 
-function MsgList() {
+function MsgList({ messagesFromServer, users }) {
   const { query } = useRouter();
   const userId = query.userId || query.userid || "";
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(messagesFromServer);
   const [editingId, setEditingId] = useState(null);
   const fetchMoreEl = useRef(null);
   const { intersecting } = useInfiniteScroll(fetchMoreEl);
@@ -89,6 +89,7 @@ function MsgList() {
             isEditing={editingId === item.id}
             onDelete={() => onDelete(item.id)}
             myId={userId}
+            user={users[item.userId]}
           />
         ))}
       </ul>
