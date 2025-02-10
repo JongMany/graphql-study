@@ -10,6 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@tanstack/react-query": "^5.66.0",
+    "graphql": "^16.10.0",
+    "graphql-request": "^7.1.2",
+    "graphql-tag": "^2.12.6",
     "ky": "^1.7.4",
     "next": "^15.1.6",
     "react": "^19.0.0",
