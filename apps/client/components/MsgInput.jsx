@@ -10,7 +10,7 @@ export default function MsgInput({ mutate, id = undefined, text }) {
 
     const text = textRef.current.value.trim();
 
-    mutate(text, id);
+    mutate({ text, id });
     // Initialize the text
     textRef.current.value = "";
   };

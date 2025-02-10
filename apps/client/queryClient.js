@@ -1,7 +1,7 @@
-import ky from "ky";
+// import ky from "ky";
 import { request } from "graphql-request";
 
-const URL = "http://localhost:8080/graphql";
+const URL = "http://localhost:8000/graphql";
 
 // const apiInstance = ky.create({ prefixUrl: "http://localhost:8000" });
 
@@ -13,3 +13,10 @@ const URL = "http://localhost:8080/graphql";
 
 export const fetcher = (query, variables = {}) =>
   request(URL, query, variables);
+
+export const QueryKeys = {
+  MESSAGES: ["MESSAGES"],
+  MESSAGE: ["MESSAGE"],
+  USERS: ["USERS"],
+  USER: ["USER"],
+};

@@ -1,20 +1,32 @@
 import { useRef } from "react";
+
 import "./index.scss";
-import { QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClientProvider,
+  QueryClient,
+  HydrationBoundary,
+  dehydrate,
+} from "@tanstack/react-query";
 
 const App = ({ Component, pageProps }) => {
   const clientRef = useRef(null);
 
   const getClient = () => {
     if (!clientRef.current) {
-      clientRef.current = new QueryClient();
+      clientRef.current = new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+          },
+        },
+      });
     }
     return clientRef.current;
   };
 
   return (
     <QueryClientProvider client={getClient()}>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </QueryClientProvider>
   );
 };
